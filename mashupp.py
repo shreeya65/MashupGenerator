@@ -10,7 +10,7 @@ from email.mime.base import MIMEBase
 from email import encoders
 from pydub import AudioSegment
 
-# Function to get YouTube links
+
 def get_youtube_links(api_key, query, max_results=2):
     youtube = build('youtube', 'v3', developerKey=api_key)
     search_response = youtube.search().list(
@@ -28,7 +28,7 @@ def get_youtube_links(api_key, query, max_results=2):
 
     return video_links
 
-# Function to download audio directly in mp3 without needing ffmpeg
+
 def download_audio(video_urls, download_path):
     if not os.path.exists(download_path):
         os.makedirs(download_path)
@@ -37,7 +37,7 @@ def download_audio(video_urls, download_path):
         'format': 'bestaudio/best',
         'outtmpl': f'{download_path}/%(title)s.%(ext)s',
         'postprocessors': [{
-            'key': 'FFmpegExtractAudio',  # Using yt-dlp's internal postprocessing
+            'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
             'preferredquality': '192'
         }],
@@ -53,7 +53,7 @@ def download_audio(video_urls, download_path):
 
     return downloaded_files
 
-# Function to create mashup without requiring ffmpeg
+
 def create_mashup(audio_files, duration_ms, output_file):
     mashup = AudioSegment.silent(duration=0)
 
@@ -65,7 +65,7 @@ def create_mashup(audio_files, duration_ms, output_file):
     mashup.export(output_file, format="mp3")
     return output_file
 
-# Function to send email with attachment
+
 def send_email_with_attachment(sender_email, sender_password, recipient_email, subject, body, file_path):
     msg = MIMEMultipart()
     msg['From'] = sender_email
@@ -92,15 +92,15 @@ def send_email_with_attachment(sender_email, sender_password, recipient_email, s
     except Exception as e:
         st.error(f"Error: {e}")
 
-# Streamlit App
+
 st.title("Mashup Generator")
 st.write("Enter the details to generate a mashup and get it delivered to your email!")
 
-# User inputs
+
 email = st.text_input("Enter your email")
 singer_name = st.text_input("Enter the singer's name")
 duration = st.number_input("Enter the mashup duration (in seconds)", min_value=10, max_value=300, step=1)
-api_key = "AIzaSyCVGOVkLO4Q4rqPl4Gf5Yu_16wnw_CJpsA"  # Replace this with your YouTube API Key
+api_key = "AIzaSyCVGOVkLO4Q4rqPl4Gf5Yu_16wnw_CJpsA"  
 
 if st.button("Generate Mashup"):
     if email and singer_name and duration:
